@@ -34,6 +34,8 @@ type LoadState = "idle" | "loading" | "error";
 const shuffle = <T,>(items: T[]): T[] => [...items].sort(() => Math.random() - 0.5);
 
 const createOptions = (activeItems: QuizItem[]): QuizItem[] => shuffle(activeItems);
+const getFeedbackLabel = (feedback: "idle" | "correct" | "incorrect"): string =>
+  feedback === "idle" ? "Gotta guess 'em all" : feedback;
 
 const loadCachedItems = (cacheKey: string): QuizItem[] | null => {
   const raw = localStorage.getItem(cacheKey);
@@ -311,7 +313,12 @@ export const App = () => {
                 setSettingsOpen(false);
               }}
             >
-              {activeDataset.emoji}
+              <img
+                src={activeDataset.iconUrl}
+                alt=""
+                className="datasetIcon datasetIconButton"
+                aria-hidden
+              />
             </button>
             {datasetMenuOpen && (
               <section className="datasetPanel" role="menu">
@@ -328,8 +335,8 @@ export const App = () => {
                       setDatasetMenuOpen(false);
                     }}
                   >
-                    <span className="datasetOptionEmoji" aria-hidden>
-                      {dataset.emoji}
+                    <span className="datasetOptionIconWrap" aria-hidden>
+                      <img src={dataset.iconUrl} alt="" className="datasetIcon datasetIconOption" />
                     </span>
                     {dataset.label}
                   </button>
@@ -486,7 +493,7 @@ export const App = () => {
             })}
           </section>
           <footer className={`feedback ${continuousSession.feedback}`}>
-            {continuousSession.feedback}
+            {getFeedbackLabel(continuousSession.feedback)}
           </footer>
         </>
       )}
@@ -513,7 +520,7 @@ export const App = () => {
             ))}
           </section>
           <footer className={`feedback ${onePlusFourSession.feedback}`}>
-            {onePlusFourSession.feedback}
+            {getFeedbackLabel(onePlusFourSession.feedback)}
           </footer>
         </>
       )}
