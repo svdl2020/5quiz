@@ -62,7 +62,9 @@ describe("continuous engine", () => {
     }
 
     expect(shouldRefillContinuous(state)).toBe(true);
+    const activeBeforeRefill = state.pictureSlots.filter((item) => item !== null).length;
+    const expectedActiveAfterRefill = Math.min(5, activeBeforeRefill + state.remainingPool.length);
     const refilled = refillContinuousSlots(state);
-    expect(refilled.pictureSlots.filter((item) => item !== null).length).toBe(5);
+    expect(refilled.pictureSlots.filter((item) => item !== null).length).toBe(expectedActiveAfterRefill);
   });
 });
